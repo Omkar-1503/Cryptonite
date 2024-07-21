@@ -2,32 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
+/* Base styles */
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: #EFEFEF; /* Light background color */
+  color: #1C1C1C; /* Dark text color for readability */
+  font-family: 'Arial', sans-serif;
+  margin: 0; /* Remove default margin */
 }
 
+/* Link styles */
+a {
+  color: #FF3B3F; /* Accent color */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1C1C1C; /* Primary color for hover effect */
+}
+
+/* Utility styles */
+/* If you want to include the commented out utility styles, you can uncomment the following lines */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
+
+/* Custom properties for light and dark themes */
+:root {
+  --foreground-rgb: 28, 28, 28; /* Dark text color */
+  --background-start-rgb: 239, 239, 239; /* Light background color start */
+  --background-end-rgb: 239, 239, 239; /* Light background color end */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 224, 224, 224; /* Light text color for dark theme */
+    --background-start-rgb: 18, 18, 18; /* Dark background color start */
+    --background-end-rgb: 18, 18, 18; /* Dark background color end */
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: flex;
+  flex-wrap: nowrap;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee > div {
+  min-width: 16rem; /* Adjust width according to your box size */
+}
+
+
+
