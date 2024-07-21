@@ -1,10 +1,9 @@
-"use client"; // Ensure this is a client component
+"use client";
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use useRouter from next/navigation for client-side routing
 import axios from 'axios';
 import Image from 'next/image';
-import { useParams } from 'next/navigation'; // Import useParams for accessing route parameters
+import { useParams } from 'next/navigation';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -19,7 +18,7 @@ import {
   ChartOptions,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import dayjs from 'dayjs';
+import { useTheme } from '@/context/theme-context';
 
 ChartJS.register(
   LineElement,
@@ -33,7 +32,8 @@ ChartJS.register(
 );
 
 const ProductPage: React.FC = () => {
-  const { id } = useParams(); // Get the dynamic route parameter from useParams
+  const { id } = useParams();
+  const { isDarkMode } = useTheme();
   const [coin, setCoin] = useState<any>(null);
   const [chartData, setChartData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,7 +61,7 @@ const ProductPage: React.FC = () => {
 
         const { prices } = marketChartResponse.data;
         const formattedChartData = {
-          labels: prices.map((price: [number, number]) => dayjs(price[0]).format('YYYY-MM-DD')),
+          labels: prices.map((price: [number, number]) => new Date(price[0]).toISOString().split('T')[0]),
           datasets: [
             {
               label: 'Price',
@@ -84,8 +84,8 @@ const ProductPage: React.FC = () => {
     fetchCoinData();
   }, [id]);
 
-  if (loading) return <div className="text-gray-900">Loading...</div>;
-  if (!coin) return <div className="text-gray-900">No data found</div>;
+  if (loading) return <div className={isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}>Loading...</div>;
+  if (!coin) return <div className={isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}>No data found</div>;
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -99,20 +99,20 @@ const ProductPage: React.FC = () => {
         title: {
           display: true,
           text: 'Date',
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
         ticks: {
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
       },
       y: {
         title: {
           display: true,
           text: 'Price (USD)',
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
         ticks: {
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
       },
     },
@@ -120,7 +120,7 @@ const ProductPage: React.FC = () => {
       legend: {
         position: 'top',
         labels: {
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
       },
       tooltip: {
@@ -140,20 +140,20 @@ const ProductPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-#CAEBF2 to-#A9A9A9 p-16 text-#1C1C1C">
+    <div className={`min-h-screen p-16 ${isDarkMode ? 'bg-[#1C1C1C] text-[#EFEFEF]' : 'bg-[#EFEFEF] text-[#1C1C1C]'}`}>
       <h1 className="text-3xl font-bold mb-6">{coin.name}</h1>
-      <div className="bg-#EFEFEF shadow-md rounded-lg p-4">
+      <div className={`shadow-md rounded-lg p-4 ${isDarkMode ? 'bg-[#333333]' : 'bg-[#EFEFEF]'}`}>
         <Image
           src={coin.image.large}
           alt={coin.name}
           width={80}
           height={80}
         />
-        <p className="text-#1C1C1C mt-4">{coin.description.en}</p>
-        <p className="text-#1C1C1C mt-4">Current Price: ${coin.market_data.current_price.usd}</p>
+        <p className={`mt-4 ${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>{coin.description.en}</p>
+        <p className={`mt-4 ${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>Current Price: ${coin.market_data.current_price.usd}</p>
       </div>
-      <div className="bg-#EFEFEF shadow-md rounded-lg p-4 mt-6">
-        <h2 className="text-2xl font-semibold mb-4">Price Chart</h2>
+      <div className={`shadow-md rounded-lg p-4 mt-6 ${isDarkMode ? 'bg-[#333333]' : 'bg-[#EFEFEF]'}`}>
+        <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-[#FF3B3F]' : 'text-[#FF3B3F]'}`}>Price Chart</h2>
         <div className="relative h-80">
           {chartData && <Line data={chartData} options={options} />}
         </div>

@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTheme } from '@/context/theme-context';
 
 const PublicCompaniesHoldings = () => {
+  const { isDarkMode } = useTheme();
+
   const btcHoldings = [
     { company: 'MicroStrategy Inc.', symbol: 'NASDAQ:MSTR', total: '226,331 BTC', todaysValue: '$15.08B', percent: '1.078%' },
     { company: 'Marathon Digital Holdings', symbol: 'NASDAQ:MARA', total: '17,320 BTC', todaysValue: '$1.15B', percent: '0.082%' },
@@ -18,14 +21,14 @@ const PublicCompaniesHoldings = () => {
   ];
 
   const renderHoldings = (holdings: any[], key: string) => (
-    <div className="relative overflow-hidden">
-      <h3 className="text-2xl font-semibold mb-4 text-[#FF3B3F]">{key} Holdings</h3>
+    <div className={`relative overflow-hidden ${isDarkMode ? 'bg-[#333333] text-[#EFEFEF]' : 'bg-[#EFEFEF] text-[#1C1C1C]'}`}>
+      <h3 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-[#FF3B3F]' : 'text-[#FF3B3F]'}`}>{key} Holdings</h3>
       <div className="relative flex overflow-hidden">
         <div className="flex animate-marquee">
           {holdings.concat(holdings).map((holding, index) => (
-            <div key={index} className="bg-[#A9A9A9] rounded-lg shadow-lg p-4 w-64 h-40 mx-2">
-              <h4 className="text-lg font-medium text-[#1C1C1C]">{holding.company}</h4>
-              <p className="text-sm text-[#1C1C1C]">{holding.symbol}</p>
+            <div key={index} className={`rounded-lg shadow-lg p-4 w-64 h-40 mx-2 ${isDarkMode ? 'bg-[#444444]' : 'bg-[#A9A9A9]'}`}>
+              <h4 className={`text-lg font-medium ${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>{holding.company}</h4>
+              <p className={`text-sm ${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>{holding.symbol}</p>
               <p><strong>Total {key === 'Bitcoin' ? 'Bitcoin' : 'Ethereum'}:</strong> {holding.total}</p>
               <p><strong>Value:</strong> {holding.todaysValue}</p>
               <p><strong>% of Total {key === 'Bitcoin' ? 'BTC' : 'ETH'} Supply:</strong> {holding.percent}</p>
@@ -37,8 +40,8 @@ const PublicCompaniesHoldings = () => {
   );
 
   return (
-    <div className="bg-[#EFEFEF] text-[#1C1C1C] py-6 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-semibold mb-6 text-[#FF3B3F]">Public Companies Holdings</h2>
+    <div className={`py-6 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-[#1C1C1C] text-[#EFEFEF]' : 'bg-[#EFEFEF] text-[#1C1C1C]'}`}>
+      <h2 className={`text-3xl font-semibold mb-6 ${isDarkMode ? 'text-[#FF3B3F]' : 'text-[#FF3B3F]'}`}>Public Companies Holdings</h2>
       <div className="flex flex-col gap-8">
         {renderHoldings(btcHoldings, 'Bitcoin')}
         {renderHoldings(ethHoldings, 'Ethereum')}

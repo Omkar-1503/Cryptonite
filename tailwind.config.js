@@ -8,15 +8,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#CAEBF2',
-        secondary: '#A9A9A9',
-        accent: '#FF3B3F',
-        background: '#EFEFEF',
-        textPrimary: '#1C1C1C',
-        textSecondary: '#333333',
+        light: {
+          primary: '#CAEBF2',
+          secondary: '#A9A9A9',
+          accent: '#FF3B3F',
+          background: '#EFEFEF',
+          textPrimary: '#1C1C1C',
+          textSecondary: '#333333',
+        },
+        dark: {
+          primary: '#1C1C1C',
+          secondary: '#A9A9A9',
+          accent: '#FF3B3F',
+          background: '#333333',
+          textPrimary: '#EFEFEF',
+          textSecondary: '#CCCCCC',
+        },
       },
     },
   },
   plugins: [],
-}
-
+};

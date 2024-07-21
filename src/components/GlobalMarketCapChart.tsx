@@ -16,7 +16,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import axios from 'axios';
-import dayjs from 'dayjs';
+import { useTheme } from '@/context/theme-context';
 
 ChartJS.register(
   LineElement,
@@ -37,6 +37,7 @@ const GlobalMarketCapChart = () => {
   const [chartData, setChartData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { isDarkMode } = useTheme();
 
   const formatNumber = (num: number) => {
     if (num >= 1e12) {
@@ -49,11 +50,18 @@ const GlobalMarketCapChart = () => {
     return num.toString();
   };
 
+  const formatDateToMonthStart = (timestamp: number) => {
+    const date = new Date(timestamp);
+    date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    return date.toISOString().split('T')[0];
+  };
+
   useEffect(() => {
     const fetchHistoricalData = async () => {
       try {
         const cryptocurrencies = ['bitcoin', 'ethereum', 'tether', 'binancecoin', 'solana'];
-        const days = '365'; // Fetch data for 1 year
+        const days = '365';
 
         const promises = cryptocurrencies.map((crypto) =>
           axios.get<MarketCapData>(
@@ -72,9 +80,8 @@ const GlobalMarketCapChart = () => {
 
         const datasets = responses.map((response, index) => {
           const { market_caps } = response.data;
-          // Aggregate data to monthly
-          const monthlyData = market_caps.reduce((acc: { x: string; y: number }[], [timestamp, marketCap], idx) => {
-            const month = dayjs(timestamp).startOf('month').format('YYYY-MM-DD');
+          const monthlyData = market_caps.reduce((acc: { x: string; y: number }[], [timestamp, marketCap]) => {
+            const month = formatDateToMonthStart(timestamp);
             if (!acc.length || acc[acc.length - 1].x !== month) {
               acc.push({ x: month, y: marketCap });
             }
@@ -82,11 +89,11 @@ const GlobalMarketCapChart = () => {
           }, []);
 
           const colors = [
-            '#FF4B5C', // Bitcoin
-            '#6C5B7B', // Ethereum
-            '#C06C84', // Tether
-            '#F67280', // Binance Coin
-            '#F8B400'  // Solana
+            '#FF4B5C',
+            '#6C5B7B',
+            '#C06C84',
+            '#F67280',
+            '#F8B400'
           ];
 
           return {
@@ -122,27 +129,27 @@ const GlobalMarketCapChart = () => {
       x: {
         type: 'time',
         time: {
-          unit: 'month', // Group data by month
+          unit: 'month',
         },
         title: {
           display: true,
           text: 'Date',
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
         ticks: {
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
       },
       y: {
         title: {
           display: true,
           text: 'Market Cap (USD)',
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
         ticks: {
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
           callback: (value) => formatNumber(value as number),
-          stepSize: 10000000000, // Set step size to 10 billion
+          stepSize: 10000000000,
         },
       },
     },
@@ -150,7 +157,7 @@ const GlobalMarketCapChart = () => {
       legend: {
         position: 'top',
         labels: {
-          color: '#1C1C1C',
+          color: isDarkMode ? '#EFEFEF' : '#1C1C1C',
         },
       },
       tooltip: {
@@ -170,9 +177,9 @@ const GlobalMarketCapChart = () => {
   };
 
   return (
-    <div className="bg-[#EFEFEF] shadow-lg rounded-lg p-4 w-full max-w-full mx-auto">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-[#1C1C1C]">Global Market Cap Chart</h2>
-      <div className="relative h-80 md:h-96"> {/* Adjusted height */}
+    <div className={`shadow-lg rounded-lg p-4 w-full max-w-full mx-auto ${isDarkMode ? 'bg-[#1C1C1C] text-[#EFEFEF]' : 'bg-[#EFEFEF] text-[#1C1C1C]'}`}>
+      <h2 className={`text-2xl md:text-3xl font-semibold mb-4 ${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>Global Market Cap Chart</h2>
+      <div className="relative h-80 md:h-96">
         <Line data={chartData} options={options} />
       </div>
     </div>

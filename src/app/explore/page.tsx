@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
 import { addItem, removeItem } from '@/store/watchlistSlice';
+import { useTheme } from '@/context/theme-context';
 
 const ExplorePage = () => {
   const [coins, setCoins] = useState<any[]>([]);
@@ -15,6 +16,7 @@ const ExplorePage = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const watchlistItems = useSelector((state: RootState) => state.watchlist.items);
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     const fetchCoins = async () => {
@@ -31,9 +33,9 @@ const ExplorePage = () => {
           }
         );
         setCoins(response.data);
-        setLoading(false);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching coins:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -61,13 +63,13 @@ const ExplorePage = () => {
   if (loading) return <div className="text-gray-900">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EFEFEF] to-[#EFEFEF] p-16 text-[#1C1C1C]">
-      <h1 className="text-3xl font-bold mb-6 text-[#FF3B3F]">Explore Cryptocurrencies</h1>
+    <div className={`min-h-screen p-20 ${isDarkMode ? 'bg-[#1C1C1C] text-[#EFEFEF]' : 'bg-gradient-to-b from-[#EFEFEF] to-[#EFEFEF] text-[#1C1C1C]'}`}>
+      <h1 className={`text-3xl font-bold mb-6 ${isDarkMode ? 'text-[#FF3B3F]' : 'text-[#FF3B3F]'}`}>Explore Cryptocurrencies</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {coins.map((coin) => {
           const isInWatchlist = watchlistItems.some(item => item.id === coin.id);
           return (
-            <div key={coin.id} className="bg-[#EFEFEF] shadow-md rounded-lg p-4 hover:bg-[#A9A9A9] transition duration-300">
+            <div key={coin.id} className={`shadow-md rounded-lg p-4 transition duration-300 ${isDarkMode ? 'bg-[#333333] hover:bg-[#444444]' : 'bg-[#EFEFEF] hover:bg-[#A9A9A9]'}`}>
               <div className="flex items-center space-x-4">
                 <Image
                   src={coin.image}
@@ -76,12 +78,12 @@ const ExplorePage = () => {
                   height={40}
                 />
                 <div>
-                  <h2 className="text-xl font-semibold text-[#1C1C1C]">
+                  <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>
                     <Link href={`/explore/${coin.id}`}>
                       {coin.name}
                     </Link>
                   </h2>
-                  <p className="text-[#1C1C1C]">${coin.current_price.toLocaleString()}</p>
+                  <p className={`${isDarkMode ? 'text-[#EFEFEF]' : 'text-[#1C1C1C]'}`}>${coin.current_price.toLocaleString()}</p>
                 </div>
                 <button onClick={() => toggleWatchlist(coin)}>
                   {isInWatchlist ? '⭐' : '☆'}
@@ -94,14 +96,14 @@ const ExplorePage = () => {
       <div className="flex justify-between mt-6">
         <button
           onClick={handlePreviousPage}
-          className="bg-[#FF3B3F] text-[#EFEFEF] px-4 py-2 rounded hover:bg-[#CAEBF2] hover:text-[#1C1C1C] transition duration-300"
+          className={`px-4 py-2 rounded transition duration-300 ${isDarkMode ? 'bg-[#FF3B3F] text-[#1C1C1C] hover:bg-[#CAEBF2] hover:text-[#1C1C1C]' : 'bg-[#FF3B3F] text-[#EFEFEF] hover:bg-[#CAEBF2] hover:text-[#1C1C1C]'}`}
           disabled={page === 1}
         >
           Previous
         </button>
         <button
           onClick={handleNextPage}
-          className="bg-[#FF3B3F] text-[#EFEFEF] px-4 py-2 rounded hover:bg-[#CAEBF2] hover:text-[#1C1C1C] transition duration-300"
+          className={`px-4 py-2 rounded transition duration-300 ${isDarkMode ? 'bg-[#FF3B3F] text-[#1C1C1C] hover:bg-[#CAEBF2] hover:text-[#1C1C1C]' : 'bg-[#FF3B3F] text-[#EFEFEF] hover:bg-[#CAEBF2] hover:text-[#1C1C1C]'}`}
         >
           Next
         </button>

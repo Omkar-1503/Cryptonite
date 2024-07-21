@@ -1,45 +1,41 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Base styles */
+
 body {
-  background-color: #EFEFEF; /* Light background color */
-  color: #1C1C1C; /* Dark text color for readability */
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: 'Arial', sans-serif;
-  margin: 0; /* Remove default margin */
+  margin: 0;
 }
 
-/* Link styles */
+
+[data-theme='light'] {
+  --foreground: #1C1C1C;
+  --background: #EFEFEF;
+}
+
+
+[data-theme='dark'] {
+  --foreground: #E0E0E0;
+  --background: #121212;
+}
+
+
 a {
-  color: #FF3B3F; /* Accent color */
+  color: #FF3B3F;
   text-decoration: none;
 }
 
 a:hover {
-  color: #1C1C1C; /* Primary color for hover effect */
+  color: #1C1C1C;
 }
 
-/* Utility styles */
-/* If you want to include the commented out utility styles, you can uncomment the following lines */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-}
-
-/* Custom properties for light and dark themes */
-:root {
-  --foreground-rgb: 28, 28, 28; /* Dark text color */
-  --background-start-rgb: 239, 239, 239; /* Light background color start */
-  --background-end-rgb: 239, 239, 239; /* Light background color end */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 224, 224, 224; /* Light text color for dark theme */
-    --background-start-rgb: 18, 18, 18; /* Dark background color start */
-    --background-end-rgb: 18, 18, 18; /* Dark background color end */
   }
 }
 
@@ -55,8 +51,16 @@ a:hover {
 }
 
 .animate-marquee > div {
-  min-width: 16rem; /* Adjust width according to your box size */
+  min-width: 16rem;
 }
 
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: center;
+  }
 
-
+  .search-input {
+    max-width: 100%;
+  }
+}

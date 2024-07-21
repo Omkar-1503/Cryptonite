@@ -1,12 +1,11 @@
+"use client";
+
 import React from 'react';
 import Navbar from '@/components/Navbar';
-import Providers from '@/components/Providers';
+import { ThemeProvider } from '@/context/theme-context';
+import { Provider } from 'react-redux';
+import { store } from '@/store/store';
 import '@/app/globals.css';
-
-export const metadata = {
-  title: 'Cryptonite',
-  description: 'Explore the world of cryptocurrencies.',
-};
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -14,16 +13,18 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
+        <title>Cryptonite</title>
+        <meta name="description" content="Explore the world of cryptocurrencies." />
       </head>
       <body>
-        <Providers>
-          <Navbar />
-          <main className="container mx-auto p-4">
-            {children}
-          </main>
-        </Providers>
+        <Provider store={store}> {}
+          <ThemeProvider> {}
+            <Navbar />
+            <main className="container mx-auto">
+              {children}
+            </main>
+          </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );
